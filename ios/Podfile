@@ -14,6 +14,8 @@ target 'faqrmobile' do
 
   pod 'RNPermissions', :path => '../node_modules/react-native-permissions'
 
+  pod 'react-native-randombytes', :path => '../node_modules/react-native-randombytes'
+
   target 'faqrmobileTests' do
     inherit! :complete
     # Pods for testing
