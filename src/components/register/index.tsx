@@ -4,8 +4,8 @@ import QRCodeScanner from 'react-native-qrcode-scanner';
 import {Text, TouchableOpacity} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {useNavigation} from '@react-navigation/native';
-// import {PrivateKey} from 'eciesjs';
-// import {generatePair} from '../../services/ecc';
+import {PrivateKey} from 'eciesjs';
+import {generatePair} from '../../services/ecc';
 
 interface RegisterScan {
   hash: string;
@@ -18,13 +18,13 @@ const Register = () => {
   const [privateKey, setPrivateKey] = React.useState<string>('');
   const [publicKey, setPublicKey] = React.useState<string>('');
 
-  // React.useEffect(() => {
-  //   if (privateKey === '' && publicKey === '') {
-  //     const pKey: PrivateKey = generatePair();
-  //     setPrivateKey(pKey.toHex());
-  //     setPublicKey(pKey.toHex());
-  //   }
-  // }, [privateKey, publicKey]);
+  React.useEffect(() => {
+    if (privateKey === '' && publicKey === '') {
+      const pKey: PrivateKey = generatePair();
+      setPrivateKey(pKey.toHex());
+      setPublicKey(pKey.toHex());
+    }
+  }, [privateKey, publicKey]);
 
   const onSuccess = (e) => {
     const hash: RegisterScan = JSON.parse(e.data);
@@ -54,6 +54,8 @@ const Register = () => {
       bottomContent={
         <TouchableOpacity>
           <Text>OK. Got it!</Text>
+          <Text>{publicKey}</Text>
+          <Text>{privateKey}</Text>
         </TouchableOpacity>
       }
     />
