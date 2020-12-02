@@ -6,11 +6,18 @@ import {useIsFocused} from '@react-navigation/native';
 
 const WebsiteList = ({navigation}) => {
   const [keys, setKeys] = React.useState<string[]>([]);
+  const [keyValues, setValues] = React.useState<string[]>([]);
   const isFocused = useIsFocused();
   const getAllKeys = async () => {
     try {
       const allKeys = await AsyncStorage.getAllKeys();
       setKeys(allKeys);
+      let allValues: string[] = [];
+      allKeys.map(async (key: string) => {
+        const value = await AsyncStorage.getItem(key);
+        allValues.push(value ? value : '');
+      });
+      setValues(allValues);
     } catch (e) {
       // read key error
       console.warn(e);
@@ -24,10 +31,12 @@ const WebsiteList = ({navigation}) => {
 
   return (
     <>
-      {keys.map((value: string) => {
+      {keys.map((key: string, index: number) => {
+        const value = keyValues[index];
         return (
           <WebsiteListComponent
-            key={value}
+            key={key}
+            storageKey={key}
             skey={value}
             navigation={navigation}
           />
