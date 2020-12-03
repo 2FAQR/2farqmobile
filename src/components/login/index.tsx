@@ -6,33 +6,38 @@ import {SERVER_BASE_URL} from '../../config';
 
 const Login = ({navigation, route}) => {
   const onSuccess = (e) => {
-    console.log('register' + e.data);
+    const qrText: string = e.data;
+    const splitText: string[] = qrText.split('____');
+    const hash = splitText[0];
+    const token = splitText[1];
+    // decrypt the hash here
+    console.log(hash);
+    console.log(token);
+
+    loginVerify(token, hash).then((res) => {
+      console.log(res);
+    });
   };
 
-  const login = async (username: string, password: string) => {
+  const loginVerify = async (token: string, hash: string) => {
     try {
-      const response = await fetch(SERVER_BASE_URL + '/auth/login', {
+      const response = await fetch(SERVER_BASE_URL + '/qrcode/verifylogin', {
         method: 'POST',
-        headers: {'Content-Type': 'application/json'},
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + token,
+        },
         body: JSON.stringify({
-          email: username,
-          password: password,
+          hash: hash,
         }),
       });
-      const respJson = response.json();
-      return respJson;
+      return await response.json();
     } catch (error) {
       console.warn(error.message);
     } finally {
       console.log('login run complete');
     }
   };
-  React.useEffect(() => {
-    console.log(route.params.skey);
-    login('test@test.com', 'password').then((resp) => {
-      console.log(resp);
-    });
-  }, []);
   return (
     <QRCodeScanner
       onRead={onSuccess}

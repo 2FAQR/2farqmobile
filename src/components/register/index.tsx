@@ -76,7 +76,7 @@ const Register = () => {
   const set = async (value: string) => {
     try {
       const keys = await AsyncStorage.getAllKeys();
-      const keyLength: number = await keys.length;
+      const keyLength: number = keys.length;
       console.log('setting pkey');
       console.log(value);
       await AsyncStorage.setItem((keyLength + 1).toString(), value);
