@@ -3,19 +3,37 @@ import React from 'react';
 import QRCodeScanner from 'react-native-qrcode-scanner';
 import {Text, TouchableOpacity} from 'react-native';
 import {SERVER_BASE_URL} from '../../config';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {PrivateKey, decrypt} from 'eciesjs';
+import {decryptMessage} from '../../services/ecc';
+import {Buffer} from 'buffer';
 
 const Login = ({navigation, route}) => {
   const onSuccess = (e) => {
     const qrText: string = e.data;
     const splitText: string[] = qrText.split('____');
-    const hash = splitText[0];
+    const encData = splitText[0];
     const token = splitText[1];
+    const username = splitText[2];
     // decrypt the hash here
-    console.log(hash);
-    console.log(token);
-
-    loginVerify(token, hash).then((res) => {
-      console.log(res);
+    AsyncStorage.getItem(username).then((res: string | null) => {
+      if (res) {
+        const privateKey = PrivateKey.fromHex(res);
+        console.log(encData);
+        console.log(token);
+        const decryptedHash = decryptMessage(
+          privateKey.toHex(),
+          Buffer.from(encData, 'hex'),
+        );
+        loginVerify(token, decryptedHash)
+          .then((resp) => {
+            console.log(resp);
+          })
+          .catch((error) => {
+            console.warn('Login Verification Failed');
+            console.warn(error);
+          });
+      }
     });
   };
 

@@ -21,6 +21,8 @@ const Register = () => {
       const pKey: PrivateKey = generatePair();
       setPrivateKey(pKey.toHex());
       setPublicKey(pKey.publicKey.toHex());
+      console.log('Private Key : ' + pKey.toHex());
+      console.log('Public Key : ' + pKey.publicKey.toHex());
     }
   }, [privateKey, publicKey]);
 
@@ -55,6 +57,7 @@ const Register = () => {
     const splitText: string[] = qrText.split('____');
     const hash = splitText[0];
     const token = splitText[1];
+    const username = splitText[2];
     console.log(hash);
     console.log(token);
     sendHashVerification(hash, token, publicKey)
@@ -63,7 +66,7 @@ const Register = () => {
         if (res && res === 200) {
           console.log('Hash Updated');
           console.log(publicKey);
-          set(publicKey).then(() => {
+          set(username, privateKey).then(() => {
             console.log('public key added to the async storage');
           });
         }
@@ -73,13 +76,10 @@ const Register = () => {
       });
   };
 
-  const set = async (value: string) => {
+  const set = async (username: string, value: string) => {
     try {
-      const keys = await AsyncStorage.getAllKeys();
-      const keyLength: number = keys.length;
-      console.log('setting pkey');
       console.log(value);
-      await AsyncStorage.setItem((keyLength + 1).toString(), value);
+      await AsyncStorage.setItem(username, value);
     } catch (e) {
       // save error
     }

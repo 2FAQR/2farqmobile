@@ -17,7 +17,7 @@ const WebsiteListComponent: React.FC<Props> = (props) => {
   return (
     <>
       <Text>{'storage key : ' + props.storageKey}</Text>
-      <Text>{'skey key : ' + props.skey}</Text>
+      <Text>{'storage Value : ' + props.skey}</Text>
       <Button
         title="Login"
         onPress={() => navigation.navigate('Login', {skey: props.skey})}
