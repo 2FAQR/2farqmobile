@@ -13,7 +13,10 @@ const Router = () => {
       <Stack.Screen
         name="root"
         component={WebsiteList}
-        options={{title: 'Welcome'}}
+        options={{
+          title: '2-faQR Mobile',
+          headerTitleStyle: {alignSelf: 'center'},
+        }}
       />
       <Stack.Screen name="Register" component={Register} />
       <Stack.Screen name="Login" component={Login} />

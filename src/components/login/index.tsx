@@ -9,12 +9,12 @@ import {decryptMessage} from '../../services/ecc';
 import {Buffer} from 'buffer';
 
 const Login = ({navigation, route}) => {
+  const {username} = route.params;
   const onSuccess = (e) => {
     const qrText: string = e.data;
     const splitText: string[] = qrText.split('____');
     const encData = splitText[0];
     const token = splitText[1];
-    const username = splitText[2];
     // decrypt the hash here
     AsyncStorage.getItem(username).then((res: string | null) => {
       if (res) {
@@ -25,6 +25,10 @@ const Login = ({navigation, route}) => {
           privateKey.toHex(),
           Buffer.from(encData, 'hex'),
         );
+        console.log('Private key used : ' + privateKey.toHex());
+        console.log('decrypted hash : ' + decryptedHash);
+        console.log('username : ' + username);
+        console.log('enc data' + Buffer.from(encData, 'hex'));
         loginVerify(token, decryptedHash)
           .then((resp) => {
             console.log(resp);
@@ -56,6 +60,11 @@ const Login = ({navigation, route}) => {
       console.log('login run complete');
     }
   };
+  React.useEffect(() => {
+    AsyncStorage.getItem(username).then((res: string | null) => {
+      console.log(res);
+    });
+  }, [username]);
   return (
     <QRCodeScanner
       onRead={onSuccess}

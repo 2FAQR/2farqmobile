@@ -1,7 +1,7 @@
 import React from 'react';
 import WebsiteListComponent from '../WebsiteListComponent/index';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {Button} from 'react-native';
+import {Button, SafeAreaView, ScrollView} from 'react-native';
 import {useIsFocused} from '@react-navigation/native';
 
 const WebsiteList = ({navigation}) => {
@@ -31,25 +31,29 @@ const WebsiteList = ({navigation}) => {
   }, [isFocused]);
 
   return (
-    <>
-      {keys.map((key: string, index: number) => {
-        console.log(keyValues);
-        const value = keyValues[index] !== undefined ? keyValues[index][1] : '';
-        return (
-          <WebsiteListComponent
-            key={key}
-            storageKey={key}
-            skey={value}
-            navigation={navigation}
-          />
-        );
-      })}
-      {/* <Register /> */}
-      <Button
-        title="Register"
-        onPress={() => navigation.navigate('Register')}
-      />
-    </>
+    <SafeAreaView>
+      <ScrollView>
+        {keys.map((key: string, index: number) => {
+          console.log(keyValues);
+          const value =
+            keyValues[index] !== undefined ? keyValues[index][1] : '';
+          return (
+            <WebsiteListComponent
+              key={key}
+              storageKey={key}
+              skey={value}
+              navigation={navigation}
+            />
+          );
+        })}
+        {/* <Register /> */}
+        <Button
+          title="Register"
+          color={'#0bb53e'}
+          onPress={() => navigation.navigate('Register')}
+        />
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
